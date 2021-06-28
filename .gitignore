@@ -1,4 +1,5 @@
-*.js
+bin/*.js
+lib/*.js
 !jest.config.js
 *.d.ts
 node_modules
@@ -9,7 +10,6 @@ cdk.out
 
 # Hugo
 blog/public
-# blog/resources/_gen
-
+blog/resources/_gen
 
 .vscode
