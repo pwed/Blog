@@ -1,13 +1,12 @@
-baseurl: "https://blog.pwed.me/"
-title: Pwed's Blog
+baseurl: "https://example.com/"
+title: Ghostwriter example
 theme: ghostwriter
 languageCode: en-us
-copyright: Frederick Stoddart
-# disqusShortname: XXX
-# googleAnalytics: XXX
+copyright: My Name
+disqusShortname: XXX
+googleAnalytics: XXX
 pygmentsUseClasses: true
 pygmentsCodefences: true
-uglyurls: true
 
 markup:
   highlight:
@@ -29,7 +28,7 @@ privacy:
     useSessionStorage: false
 
 author:
-  name: Frederick Stoddart
+  name: My Name
   profile: ""
 
 taxonomies:
@@ -39,16 +38,15 @@ params:
   mainSections:
     - post
   intro: true
-  headline: Pwed's Blog
-  description: |
-    A place where I blog about the cool stuff I get to play with at work
-  github: "https://github.com/pwed"
-  gitlab: "https://gitlab.com/pwed"
-  linkedin: "https://linkedin.com/in/frederickstoddart/"
-  twitter: "https://twitter.com/genuinepwed"
+  headline: Ghostwriter example
+  description: Ghostwriter example description
+  github: "https://github.com/XXX"
+  gitlab: "https://gitlab.com/XXX"
+  linkedin: "https://linkedin.com/in/XXX/"
+  twitter: "https://twitter.com/XXX"
   stackoverflow: "https://stackoverflow.com/users/XXX/YYY"
   facebook: "https://www.facebook.com/username"
-  email: freddiestoddart@gmail.com
+  email: XXX@example.com
   opengraph: true
   shareTwitter: true
   rss: true
