@@ -6,6 +6,7 @@ import { S3Origin } from '@aws-cdk/aws-cloudfront-origins';
 import { Certificate, CertificateValidation } from '@aws-cdk/aws-certificatemanager'
 import { ARecord, HostedZone, RecordTarget } from '@aws-cdk/aws-route53';
 import { CloudFrontTarget } from '@aws-cdk/aws-route53-targets';
+import { execSync } from 'child_process';
 import * as path from 'path';
 
 export class BlogStack extends Stack {
@@ -57,6 +58,8 @@ export class BlogStack extends Stack {
       zone: hostedZone,
       target: RecordTarget.fromAlias(new CloudFrontTarget(distribution)),
     });
+
+    execSync("cd blog && rm -rf public && hugo")
 
     new BucketDeployment(this, 'BlogDeployment', {
       sources: [Source.asset(path.join(__dirname, '..', 'blog', 'public'))],
