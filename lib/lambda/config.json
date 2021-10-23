@@ -1,0 +1,16 @@
+{
+  "apiName": "ServerlessLand",
+  "apiDescription": "General purpose Lambda to get request from API Gateway with CDK",
+  "api": {
+    "handler": "ApiLambda"
+  },
+  "headers": {
+      "Access-Control-Allow-Headers" : "Content-Type",
+      "Access-Control-Allow-Origin": "https://blog.pwed.me",
+      "Access-Control-Allow-Methods": "OPTIONS,GET"
+    },
+    "tags": [
+      {"key": "Key", "value": "Value"},
+      {"key": "Project", "value": "ServerlessLand"}
+    ]
+}

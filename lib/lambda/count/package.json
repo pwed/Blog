@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "@types/aws-sdk": "^2.7.0",
+    "@types/aws-lambda": "^8.10.84",
+    "@types/node": "10.17.27",
+    "ts-node": "^9.0.0",
+    "typescript": "~3.9.7"
+  },
+  "dependencies": {
+    "aws-lambda": "^1.0.6",
+    "aws-sdk": "^2.1012.0",
+    "moment": "^2.29.1"
+  }
+}

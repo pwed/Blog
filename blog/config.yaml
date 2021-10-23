@@ -46,9 +46,9 @@ params:
   gitlab: "https://gitlab.com/pwed"
   linkedin: "https://linkedin.com/in/frederickstoddart/"
   twitter: "https://twitter.com/genuinepwed"
-  stackoverflow: "https://stackoverflow.com/users/XXX/YYY"
-  facebook: "https://www.facebook.com/username"
-  email: freddiestoddart@gmail.com
+  # stackoverflow: "https://stackoverflow.com/users/XXX/YYY"
+  # facebook: "https://www.facebook.com/username"
+  # email: freddiestoddart@gmail.com
   opengraph: true
   shareTwitter: true
   rss: true
