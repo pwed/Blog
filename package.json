@@ -16,6 +16,7 @@
   "dependencies": {
     "@aws-cdk/assert": "^2.0.0-rc.24",
     "aws-cdk-lib": "^2.0.0-rc.24",
-    "constructs": "^10.0.0"
+    "constructs": "^10.0.0",
+    "tmpl": ">=1.0.5"
   }
 }
