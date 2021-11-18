@@ -15,7 +15,9 @@ export class BlogPipelineStack extends Stack {
         }),
         installCommands: ["npm install -g aws-cdk@next"],
         commands: ["npm ci", "npx cdk synth"],
+        
       }),
+      dockerEnabledForSynth: true,
     });
 
     const deploy = new BlogPipelineStage(this, "Deploy");
