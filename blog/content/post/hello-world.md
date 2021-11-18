@@ -1,7 +1,6 @@
 ---
 title: "Hello World"
 date: 2021-10-25T11:45:08+11:00
-draft: false
 ---
 
 ## Hello World! 

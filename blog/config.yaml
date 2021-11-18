@@ -30,7 +30,7 @@ privacy:
 
 author:
   name: Frederick Stoddart
-  profile: ""
+  profile: "/page/about.html"
 
 taxonomies:
   tag: tags
@@ -46,14 +46,12 @@ params:
   gitlab: "https://gitlab.com/pwed"
   linkedin: "https://linkedin.com/in/frederickstoddart/"
   twitter: "https://twitter.com/genuinepwed"
-  # stackoverflow: "https://stackoverflow.com/users/XXX/YYY"
-  # facebook: "https://www.facebook.com/username"
-  # email: freddiestoddart@gmail.com
+  email: pwed@users.noreply.github.com
   opengraph: true
   shareTwitter: true
   rss: true
-  shareFacebook: true
-  shareLinkedIn: false
+  shareFacebook: false
+  shareLinkedIn: true
   dateFormat: "Mon, Jan 2, 2006"
   exponeaJsUrl: ""
   exponeaTarget: ""
@@ -77,12 +75,12 @@ menu:
     - name: Blog
       url: /
       weight: 1
-    # - name: Projects
-    #   url: /project/
+    - name: Projects
+      url: /project.html
     #   weight: 2
     # - name: Contact
     #   url: /page/contact/
     #   weight: 3
-    # - name: About
-    #   url: /page/about/
-    #   weight: 4
+    - name: About
+      url: /page/about.html
+      weight: 4

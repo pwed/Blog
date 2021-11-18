@@ -17,10 +17,12 @@ jQuery(function ($) {
 });
 
 count = window.document.getElementById("count");
-fetch(`https://api.pwed.me/count?path=${window.document.URL}`)
-  .then((response) => {
-    return response.json();
-  })
-  .then((json) => {
-    count.innerHTML = `Page Views: ${json.COUNT}`;
-  });
+if (count != null) {
+  fetch(`https://api.pwed.me/count?path=${window.document.URL}`)
+    .then((response) => {
+      return response.json();
+    })
+    .then((json) => {
+      count.innerHTML = `Post Views: ${json.COUNT}`;
+    });
+}
