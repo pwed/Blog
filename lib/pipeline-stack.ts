@@ -17,6 +17,7 @@ export class BlogPipelineStack extends Stack {
         commands: ["npm ci", "npx cdk synth"],
         
       }),
+      dockerEnabledForSelfMutation: true,
       dockerEnabledForSynth: true,
     });
 
