@@ -13,5 +13,5 @@ For simplified hosting and security, this site is created using the Static Site 
 
 ## How do I maintain this site?
 
-The entire infrastructure is created and maintained using __AWS CDK__ written in TypeScript. This means that all changes I make are docuemtned and reproducable. In future I plan to utilise __CDK Pipelines__ to automate updates.
+The entire infrastructure is created and maintained using __AWS CDK__ written in TypeScript. This means that all changes I make are documetned and reproducable. In future I plan to utilise __CDK Pipelines__ to automate updates.
 

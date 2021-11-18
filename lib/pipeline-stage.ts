@@ -7,7 +7,10 @@ export class BlogPipelineStage extends Stage {
     super(scope, id, props);
 
     new BlogStack(this, "BlogStack", {
-      env: { account: "967803995830", region: "us-east-1" },
+      env: {
+          account: this.account,
+          region: this.region,
+      },
     });
   }
 }
