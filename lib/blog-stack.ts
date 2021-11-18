@@ -184,7 +184,7 @@ export class BlogStack extends Stack {
       ),
     });
 
-    execSync("cd blog && rm -rf public &&  hugo");
+    execSync(`cd blog && rm -rf public &&  docker run --rm -v ${__dirname}/../blog:/src klakegg/hugo`);
 
     new s3_deployment.BucketDeployment(this, "BlogDeployment", {
       sources: [
