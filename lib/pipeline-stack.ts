@@ -13,7 +13,7 @@ export class BlogPipelineStack extends Stack {
           connectionArn:
             "arn:aws:codestar-connections:us-east-1:967803995830:connection/762f8358-181b-4602-8ec0-92982a01386f",
         }),
-        installCommands: ["npm install -g aws-cdk@next"],
+        installCommands: ["apt-get update && apt install hugo -y", "npm install -g aws-cdk@next"],
         commands: ["npm ci", "npx cdk synth"],
         
       }),
