@@ -9,7 +9,7 @@ export class BlogPipelineStack extends Stack {
     const pipeline = new pipelines.CodePipeline(this, "Pipeline", {
       pipelineName: "BlogPipeline",
       publishAssetsInParallel: false,
-      
+
       synth: new pipelines.ShellStep("Synth", {
         input: pipelines.CodePipelineSource.connection("pwed/Blog", "master", {
           connectionArn:
@@ -25,5 +25,8 @@ export class BlogPipelineStack extends Stack {
 
     const deploy = new BlogPipelineStage(this, "Deploy");
     const deployStage = pipeline.addStage(deploy);
+    deployStage.addPre(
+      new pipelines.ManualApprovalStep('Approve Deploy')
+    )
   }
 }
