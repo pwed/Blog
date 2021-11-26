@@ -9,8 +9,10 @@ import {
   aws_cloudfront as cf,
   aws_cloudfront_origins as cf_origins,
   aws_lambda_nodejs as lambda_nodejs,
+  aws_lambda as lambda,
   aws_apigateway as apigw,
   aws_dynamodb as dynamo,
+  aws_s3_notifications as s3n,
 } from "aws-cdk-lib";
 import { execSync } from "child_process";
 import * as path from "path";
@@ -196,5 +198,16 @@ export class BlogStack extends Stack {
       distribution,
       distributionPaths: ["/*"],
     });
+
+    blogBucket.addEventNotification(
+      s3.EventType.OBJECT_CREATED,
+      new s3n.LambdaDestination(
+        new lambda.Function(this, 'object-invalidate', {
+          runtime: lambda.Runtime.PYTHON_3_9,
+          handler: 'main.handler',
+          code: lambda.Code.fromAsset(path.join(__dirname, 'lambda', 'object-invalidate')),
+        })
+      )
+    )
   }
 }

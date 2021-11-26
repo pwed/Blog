@@ -19,3 +19,8 @@ new BlogPipelineStack(app, 'BlogPipelineStack', {
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
 });
+
+
+// new BlogStack(app, 'Local', {
+//   env: { account: '000000000000', region: 'us-east-1' },
+// });
