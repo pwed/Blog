@@ -1,5 +1,5 @@
 import { Construct } from "constructs";
-import { Stack, StackProps, RemovalPolicy } from "aws-cdk-lib";
+import { Stack, StackProps, RemovalPolicy, aws_iam } from "aws-cdk-lib";
 import {
   aws_s3_deployment as s3_deployment,
   aws_s3 as s3,
@@ -10,6 +10,7 @@ import {
   aws_cloudfront_origins as cf_origins,
   aws_lambda_nodejs as lambda_nodejs,
   aws_lambda as lambda,
+  aws_iam as iam,
   aws_apigateway as apigw,
   aws_dynamodb as dynamo,
   aws_s3_notifications as s3n,
@@ -39,18 +40,22 @@ export class BlogStack extends Stack {
       validation: acm.CertificateValidation.fromDns(hostedZone),
     });
 
-    const dynamoTable = new dynamo.Table(this, 'DynamoTable', {
-      partitionKey: {name:'ID', type: dynamo.AttributeType.STRING},
-      billingMode: dynamo.BillingMode.PAY_PER_REQUEST
+    const dynamoTable = new dynamo.Table(this, "DynamoTable", {
+      partitionKey: { name: "ID", type: dynamo.AttributeType.STRING },
+      billingMode: dynamo.BillingMode.PAY_PER_REQUEST,
     });
 
-    const countHandler = new lambda_nodejs.NodejsFunction(this, "CountHandler", {
+    const countHandler = new lambda_nodejs.NodejsFunction(
+      this,
+      "CountHandler",
+      {
         entry: path.join(__dirname, "lambda", "count", "app.ts"),
         handler: "main",
         environment: {
-          DatabaseTable: dynamoTable.tableName
-        }
-      });
+          DatabaseTable: dynamoTable.tableName,
+        },
+      }
+    );
 
     dynamoTable.grantReadWriteData(countHandler);
 
@@ -63,10 +68,14 @@ export class BlogStack extends Stack {
       }
     );
 
-    const randomHandler = new lambda_nodejs.NodejsFunction(this, 'RandomHandler', {
-      entry: path.join(__dirname, "lambda", "random", "index.ts"),
-      handler: "ApiLambda",
-    })
+    const randomHandler = new lambda_nodejs.NodejsFunction(
+      this,
+      "RandomHandler",
+      {
+        entry: path.join(__dirname, "lambda", "random", "index.ts"),
+        handler: "ApiLambda",
+      }
+    );
 
     const api = new apigw.RestApi(this, "API", {
       domainName: {
@@ -86,31 +95,23 @@ export class BlogStack extends Stack {
     });
     hello.addMethod("GET");
 
-    const random = api.root.addResource("random").addResource('{number}');
-    random.addMethod(
-      'GET',
-      new apigw.LambdaIntegration(randomHandler),
-      {
-        methodResponses: [
-          {
-            statusCode: "200"
-          }
-        ]
-      }
-    )
+    const random = api.root.addResource("random").addResource("{number}");
+    random.addMethod("GET", new apigw.LambdaIntegration(randomHandler), {
+      methodResponses: [
+        {
+          statusCode: "200",
+        },
+      ],
+    });
 
     const count = api.root.addResource("count");
-    count.addMethod(
-      'GET',
-      new apigw.LambdaIntegration(countHandler),
-      {
-        methodResponses: [
-          {
-            statusCode: "200"
-          }
-        ]
-      }
-    )
+    count.addMethod("GET", new apigw.LambdaIntegration(countHandler), {
+      methodResponses: [
+        {
+          statusCode: "200",
+        },
+      ],
+    });
 
     const ip = api.root.addResource("ip");
     ip.addMethod(
@@ -140,7 +141,7 @@ export class BlogStack extends Stack {
       }
     );
 
-    new apigw.Deployment(this, 'deployment', {
+    new apigw.Deployment(this, "deployment", {
       api,
     }).applyRemovalPolicy(RemovalPolicy.RETAIN);
 
@@ -199,15 +200,32 @@ export class BlogStack extends Stack {
       distributionPaths: ["/*"],
     });
 
+    const invalidate = new lambda.Function(this, "ObjectInvalidate", {
+      runtime: lambda.Runtime.PYTHON_3_9,
+      handler: "main.handler",
+      code: lambda.Code.fromAsset(
+        path.join(__dirname, "lambda", "object-invalidate")
+      ),
+    });
+
     blogBucket.addEventNotification(
       s3.EventType.OBJECT_CREATED,
-      new s3n.LambdaDestination(
-        new lambda.Function(this, 'object-invalidate', {
-          runtime: lambda.Runtime.PYTHON_3_9,
-          handler: 'main.handler',
-          code: lambda.Code.fromAsset(path.join(__dirname, 'lambda', 'object-invalidate')),
-        })
-      )
-    )
+      new s3n.LambdaDestination(invalidate)
+    );
+
+    blogBucket.grantRead(invalidate);
+    invalidate.role?.addManagedPolicy(
+      new iam.ManagedPolicy(this, "InvalidatePolicy", {
+        statements: [
+          new iam.PolicyStatement({
+            effect: iam.Effect.ALLOW,
+            actions: ["cloudfront:CreateInvalidation"],
+            resources: [
+              `arn:aws:cloudfront::${this.account}:distribution/${distribution.distributionId}`,
+            ],
+          }),
+        ],
+      })
+    );
   }
 }

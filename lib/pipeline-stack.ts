@@ -8,6 +8,8 @@ export class BlogPipelineStack extends Stack {
 
     const pipeline = new pipelines.CodePipeline(this, "Pipeline", {
       pipelineName: "BlogPipeline",
+      publishAssetsInParallel: false,
+      
       synth: new pipelines.ShellStep("Synth", {
         input: pipelines.CodePipelineSource.connection("pwed/Blog", "master", {
           connectionArn:
