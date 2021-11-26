@@ -27,7 +27,5 @@ export class BlogPipelineStack extends Stack {
 
     const deploy = new BlogPipelineStage(this, "Deploy");
     const deployStage = pipeline.addStage(deploy);
-    const approval = new pipelines.ManualApprovalStep("Approve Deploy");
-    deployStage.addPre(approval);
   }
 }
