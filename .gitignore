@@ -1,5 +1,7 @@
 bin/*.js
 lib/*.js
+lib/**/*.js
+test/*.js
 !jest.config.js
 *.d.ts
 node_modules
