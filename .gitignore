@@ -13,5 +13,6 @@ cdk.out
 # Hugo
 blog/public
 blog/resources/_gen
+blog/.hugo_build.lock
 
 .vscode
