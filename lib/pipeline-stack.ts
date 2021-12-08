@@ -26,13 +26,15 @@ export class BlogPipelineStack extends Stack {
       dockerEnabledForSynth: true,
     });
 
+    const deploy = new BlogPipelineStage(this, "Deploy");
+    const deployStage = pipeline.addStage(deploy);
+
+    pipeline.buildPipeline();
+
     pipeline.pipeline.addToRolePolicy(new PolicyStatement({
-      actions: ['s3.getObject'],
+      actions: ['s3:getObject'],
       effect: Effect.ALLOW,
       resources: ['arn:aws:s3:::*/.hashes.json'],
     }))
-
-    const deploy = new BlogPipelineStage(this, "Deploy");
-    const deployStage = pipeline.addStage(deploy);
   }
 }
