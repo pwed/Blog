@@ -41,12 +41,12 @@ params:
   intro: true
   headline: Pwed's Blog
   description: |
-    A place where I blog about the cool stuff I get to play with at work
+    A place where I blog about the cool AWS tools I am playing with
   github: "https://github.com/pwed"
   gitlab: "https://gitlab.com/pwed"
   linkedin: "https://linkedin.com/in/frederickstoddart/"
   twitter: "https://twitter.com/genuinepwed"
-  email: pwed@users.noreply.github.com
+  email: freddiestoddart000@gmail.com
   opengraph: true
   shareTwitter: true
   rss: true

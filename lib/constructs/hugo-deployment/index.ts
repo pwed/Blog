@@ -24,12 +24,13 @@ export class HugoDeployment extends Construct {
             `cd ${props.hugoPath} && rm -rf ${props.hugoDistPath} && hugo`
         );
 
-        let invalidations: string[] = [];
-        if (props.bucketName)
+        let invalidations: string[] | undefined = undefined;
+        if (props.bucketName) {
             invalidations = compareBucketToLocal(
                 props.bucketName!,
                 hugoDistFullPath
             );
+        }
 
         new BucketDeployment(this, "HugoDeployment", {
             sources: [Source.asset(hugoDistFullPath)],
@@ -69,19 +70,27 @@ function getInvalidations(
     return invalidations;
 }
 
-function compareBucketToLocal(bucket: string, localFolder: string): string[] {
-    const oldHashesJSON = execSync(
-        `aws s3 cp s3://${bucket}/.hashes.json -`
-    ).toString();
-    const oldHashes: Map<string, string> = new Map(
-        Object.entries(JSON.parse(oldHashesJSON))
-    );
-
+function compareBucketToLocal(bucket: string, localFolder: string): string[] | undefined {
+    let oldHashesJSON: string
     const newHashes = getHashes("**", localFolder);
     writeFileSync(
-        `${localFolder}/.hashes.json`,
+        path.join(localFolder, '.hashes.json'),
         JSON.stringify(Object.fromEntries(newHashes))
     );
+    try {
+        oldHashesJSON = execSync(
+            `aws s3 cp s3://${bucket}/.hashes.json -`
+        ).toString();
+    } catch (e) {
+        if (e) {
+            return undefined
+        }
+    }
+    const oldHashes: Map<string, string> = new Map(
+        Object.entries(JSON.parse(oldHashesJSON!))
+    );
+
+
 
     return getInvalidations(oldHashes, newHashes);
 }
