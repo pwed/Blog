@@ -8,4 +8,4 @@ draft: false
 
 This page was deployed by simply commiting to GitHub!! 🎉🎉
 
-Testing invalidations
+Testing invalidations from construct
