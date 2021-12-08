@@ -63,7 +63,7 @@ function getInvalidations(
     let invalidations: string[] = [];
     oldHashes.forEach(function (v, k) {
         if (newHashes.get(k) !== v) {
-            invalidations.push(k);
+            invalidations.push(`/${k}`);
         }
     });
     return invalidations;
