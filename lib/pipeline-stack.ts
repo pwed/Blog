@@ -20,7 +20,7 @@ export class BlogPipelineStack extends Stack {
           "apt-get update && apt install -y hugo",
           "npm install -g aws-cdk@next",
         ],
-        commands: ["npm ci", "npx cdk synth"],
+        commands: ["npm ci", "npx cdk synth -q"],
       }),
       dockerEnabledForSelfMutation: true,
       dockerEnabledForSynth: true,
