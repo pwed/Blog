@@ -32,6 +32,8 @@ export class HugoDeployment extends Construct {
             hugoDistFullPath
         ))
 
+        console.log(invalidations)
+
         new BucketDeployment(this, "HugoDeployment", {
             sources: [Source.asset(hugoDistFullPath)],
             destinationBucket: props.bucket,
