@@ -46,7 +46,10 @@ export class BlogPipelineStack extends Stack {
             apiDomain: "api.pwed.me",
         });
         pipeline.addStage(prodDeploy, {
-            pre: [new ManualApprovalStep("Deploy to Prod?")],
+            stackSteps: [{
+                stack: prodDeploy.stack,
+                changeSet: [new ManualApprovalStep('ChangeSet Approval')]
+            }]
         });
     }
 }
