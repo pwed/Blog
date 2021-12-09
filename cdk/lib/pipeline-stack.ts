@@ -1,7 +1,12 @@
 import { Construct } from "constructs";
-import { Stack, StackProps, pipelines } from "aws-cdk-lib";
+import { Stack, StackProps, pipelines, aws_sns as sns } from "aws-cdk-lib";
 import { BlogDeploy } from "./pipeline-stage";
-import { ManualApprovalStep } from "aws-cdk-lib/pipelines";
+import {
+    DetailType,
+    NotificationRule,
+} from "aws-cdk-lib/aws-codestarnotifications";
+import { EmailSubscription } from "aws-cdk-lib/aws-sns-subscriptions";
+import { PipelineNotificationEvents } from "aws-cdk-lib/aws-codepipeline";
 
 export class BlogPipelineStack extends Stack {
     constructor(scope: Construct, id: string, props?: StackProps) {
@@ -46,10 +51,32 @@ export class BlogPipelineStack extends Stack {
             apiDomain: "api.pwed.me",
         });
         pipeline.addStage(prodDeploy, {
-            stackSteps: [{
-                stack: prodDeploy.stack,
-                changeSet: [new ManualApprovalStep('ChangeSet Approval',{comment:'Check Dev and check change request'})]
-            }]
+            stackSteps: [
+                {
+                    stack: prodDeploy.stack,
+                    changeSet: [
+                        new pipelines.ManualApprovalStep("ChangeSet Approval", {
+                            comment: "Check Dev and check change request",
+                        }),
+                    ],
+                },
+            ],
         });
+        const topic = new sns.Topic(this, "PipelineTopic");
+        pipeline.buildPipeline();
+        pipeline.pipeline.notifyOn("PipelineNotifications", topic, {
+            events: [
+                PipelineNotificationEvents.MANUAL_APPROVAL_NEEDED,
+                PipelineNotificationEvents.PIPELINE_EXECUTION_STARTED,
+                PipelineNotificationEvents.PIPELINE_EXECUTION_SUCCEEDED,
+                PipelineNotificationEvents.PIPELINE_EXECUTION_FAILED,
+            ],
+        });
+
+        topic.addSubscription(
+            new EmailSubscription(
+                "freddiestoddart000+aws-blog-pipeline@gmail.com"
+            )
+        );
     }
 }
