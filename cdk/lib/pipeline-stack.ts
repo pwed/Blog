@@ -16,10 +16,11 @@ export class BlogPipelineStack extends Stack {
             "arn:aws:codestar-connections:us-east-1:967803995830:connection/762f8358-181b-4602-8ec0-92982a01386f",
         }),
         installCommands: [
-          "apt-get update && apt install -y hugo",
-          "npm install -g aws-cdk@next",
+          "apt-get update && apt install -y hugo make",
+          "npm install -g aws-cdk",
         ],
         commands: ["cd cdk", "npm ci", "npx cdk synth -q"],
+        primaryOutputDirectory: "cdk/cdk.out",
       }),
       dockerEnabledForSelfMutation: true,
       dockerEnabledForSynth: true,
