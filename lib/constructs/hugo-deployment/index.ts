@@ -82,6 +82,7 @@ function compareBucketToLocal(bucket: string, localFolder: string): string[] {
             `aws s3 cp s3://${bucket}/.hashes.json -`
         ).toString();
     } catch {
+        console.log('error getting file from s3')
         return ['/*']
     }
     const oldHashes: Map<string, string> = new Map(
