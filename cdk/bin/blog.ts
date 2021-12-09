@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib';
-import { BlogStack } from '../lib/blog-stack';
 import { BlogPipelineStack } from '../lib/pipeline-stack';
 
 const app = new cdk.App();

@@ -1,7 +1,6 @@
 import { Construct } from "constructs";
 import { Stack, StackProps, pipelines } from "aws-cdk-lib";
 import { BlogPipelineStage } from "./pipeline-stage";
-import { Effect, PolicyStatement } from "aws-cdk-lib/lib/aws-iam";
 
 export class BlogPipelineStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -20,7 +19,7 @@ export class BlogPipelineStack extends Stack {
           "apt-get update && apt install -y hugo",
           "npm install -g aws-cdk@next",
         ],
-        commands: ["npm ci", "npx cdk synth -q"],
+        commands: ["cd cdk", "npm ci", "npx cdk synth -q"],
       }),
       dockerEnabledForSelfMutation: true,
       dockerEnabledForSynth: true,
@@ -28,13 +27,5 @@ export class BlogPipelineStack extends Stack {
 
     const deploy = new BlogPipelineStage(this, "Deploy");
     const deployStage = pipeline.addStage(deploy);
-
-    // pipeline.buildPipeline();
-
-    // pipeline.pipeline.addToRolePolicy(new PolicyStatement({
-    //   actions: ['s3:getObject'],
-    //   effect: Effect.ALLOW,
-    //   resources: ['arn:aws:s3:::*/.hashes.json'],
-    // }))
   }
 }

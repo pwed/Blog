@@ -1,18 +1,17 @@
-bin/*.js
-lib/*.js
-lib/**/*.js
-test/*.js
-!jest.config.js
-*.d.ts
+cdk/bin/*.js
+cdk/lib/*.js
+cdk/lib/**/*.js
+cdk/test/*.js
+!cdk/jest.config.js
+cdk/*.d.ts
+cdk/**/*.d.ts
 node_modules
 
 # CDK asset staging directory
-.cdk.staging
-cdk.out
+cdk/.cdk.staging
+cdk/cdk.out
 
 # Hugo
-blog/public
-blog/resources/_gen
-blog/.hugo_build.lock
-
-.vscode
+public
+resources/_gen
+.hugo_build.lock

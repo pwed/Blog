@@ -1,0 +1,10 @@
+{
+    "files.exclude": {
+        "cdk/**.d.ts": true,
+        "cdk/**/*.d.ts": true,
+        "cdk/bin/*.js": true,
+        "cdk/lib/*.js": true,
+        "cdk/lib/**/*.js": true,
+        "cdk/test/*.js": true
+    }
+}

@@ -187,7 +187,7 @@ export class BlogStack extends Stack {
         });
 
         new HugoDeployment(this, "BlogDeployment", {
-            hugoPath: "blog",
+            hugoPath: "..",
             hugoDistPath: "public",
             bucket: blogBucket,
             distributionDomain: 'blog.pwed.me',

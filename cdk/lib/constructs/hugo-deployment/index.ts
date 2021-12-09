@@ -4,18 +4,20 @@ import { sync as globSync } from "glob";
 import { chdir, cwd } from "process";
 import { execSync } from "child_process";
 import { Construct } from "constructs";
-import { Bucket } from "aws-cdk-lib/lib/aws-s3";
-import { Distribution } from "aws-cdk-lib/lib/aws-cloudfront";
-import { BucketDeployment, Source } from "aws-cdk-lib/lib/aws-s3-deployment";
+import {
+    aws_s3 as s3,
+    aws_cloudfront as cf,
+    aws_s3_deployment as s3deployment
+} from 'aws-cdk-lib';
 import path = require("path");
 
 export interface HugoDeploymentProps {
     hugoPath: string;
     hugoDistPath: string;
-    bucket: Bucket;
+    bucket: s3.Bucket;
     distributionDomain: string,
     hashFile: string;
-    distribution: Distribution;
+    distribution: cf.Distribution;
 }
 export class HugoDeployment extends Construct {
     constructor(scope: Construct, id: string, props: HugoDeploymentProps) {
@@ -34,8 +36,8 @@ export class HugoDeployment extends Construct {
 
         console.log(invalidations)
 
-        new BucketDeployment(this, "HugoDeployment", {
-            sources: [Source.asset(hugoDistFullPath)],
+        new s3deployment.BucketDeployment(this, "HugoDeployment", {
+            sources: [s3deployment.Source.asset(hugoDistFullPath)],
             destinationBucket: props.bucket,
             distribution: props.distribution,
             distributionPaths: invalidations,
