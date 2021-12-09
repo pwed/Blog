@@ -35,6 +35,7 @@ export class BlogPipelineStack extends Stack {
 
         pipeline.addStage(
             new BlogDeploy(this, "BlogDevDeployDev",{
+              env: props?.env,
               zoneDomain: 'pwed.me',
               blogDomain: 'dev.pwed.me',
               apiDomain: 'api.dev.pwed.me'
