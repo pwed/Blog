@@ -56,7 +56,7 @@ export class BlogStack extends Stack {
                 handler: "main",
                 environment: {
                     DatabaseTable: dynamoTable.tableName,
-                    AccessControlAllowOrigin: `https://${props.blogDomain}/`,
+                    AccessControlAllowOrigin: `https://${props.blogDomain}`,
                 },
             }
         );
@@ -79,7 +79,7 @@ export class BlogStack extends Stack {
                 entry: path.join(__dirname, "lambda", "random", "index.ts"),
                 handler: "ApiLambda",
                 environment: {
-                    AccessControlAllowOrigin: `https://${props.blogDomain}/`,
+                    AccessControlAllowOrigin: `https://${props.blogDomain}`,
                 },
             }
         );
