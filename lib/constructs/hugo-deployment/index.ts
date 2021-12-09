@@ -83,6 +83,7 @@ function compareRemoteToLocal(domain: string, hashFile: string, localFolder: str
         oldHashesJSON = execSync(
             `curl https://${domain}/${hashFile}`
         ).toString();
+        console.log(oldHashesJSON)
     } catch (e) {
         console.log('error getting file from s3', e)
         return ['/*']
