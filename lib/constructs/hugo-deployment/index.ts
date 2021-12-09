@@ -22,7 +22,7 @@ export class HugoDeployment extends Construct {
         super(scope, id);
         const hugoDistFullPath = path.join(props.hugoPath, props.hugoDistPath);
         execSync(
-            `cd ${props.hugoPath} && rm -rf ${props.hugoDistPath} && hugo`
+            `cd ${props.hugoPath} && rm -rf ${props.hugoDistPath} && hugo --minify`
         );
 
         let invalidations: string[] = [`/${props.hashFile}`];
@@ -85,7 +85,7 @@ function compareRemoteToLocal(domain: string, hashFile: string, localFolder: str
         ).toString();
         console.log(oldHashesJSON)
     } catch (e) {
-        console.log('error getting file from s3', e)
+        console.log('error getting file from web', e)
         return ['/*']
     }
     const oldHashes: Map<string, string> = new Map(

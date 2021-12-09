@@ -15,7 +15,7 @@ module.exports = {
     extensions: ['.scss'],
   },
   output: {
-    path: path.join(__dirname, 'static', 'dist'),
+    path: path.join(__dirname, 'assets', 'styles'),
   },
   plugins: [
     new FixStyleOnlyEntriesPlugin(),

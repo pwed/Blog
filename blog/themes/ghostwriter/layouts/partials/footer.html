@@ -21,10 +21,12 @@
                 </p>
             </div>
         </footer>
-
-        <script src="{{ .Site.BaseURL }}js/jquery-1.11.3.min.js"></script>
-        <script src="{{ .Site.BaseURL }}js/jquery.fitvids.js"></script>
-        <script src="{{ .Site.BaseURL }}js/scripts.js"></script>
+        {{ $scriptsjs := resources.Get "js/scripts.js" }}
+        {{ $jquery := resources.Get "js/jquery-1.11.3.min.js" }}
+        {{ $jqueryfitvids := resources.Get "js/jquery.fitvids.js" }}
+        {{ $concatjs := slice $scriptsjs $jquery $jqueryfitvids | resources.Concat "js/bundle-all.js" }}
+        {{ $jsallmin := $concatjs | resources.Minify }}
+        <script src="{{ $jsallmin.Permalink }}"></script>
         {{ $js := slice }}
         {{ range $.Params.js }}
             <script src="{{ .source }}"></script>
