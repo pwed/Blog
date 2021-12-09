@@ -48,7 +48,7 @@ export class BlogPipelineStack extends Stack {
         pipeline.addStage(prodDeploy, {
             stackSteps: [{
                 stack: prodDeploy.stack,
-                changeSet: [new ManualApprovalStep('ChangeSet Approval')]
+                changeSet: [new ManualApprovalStep('ChangeSet Approval',{comment:'Check Dev and check change request'})]
             }]
         });
     }
