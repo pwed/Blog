@@ -24,7 +24,7 @@ export class HugoDeployment extends Construct {
             `cd ${props.hugoPath} && rm -rf ${props.hugoDistPath} && hugo`
         );
 
-        let invalidations: string[] | undefined = undefined;
+        let invalidations: string[] = ['/*'];
         if (props.bucketName) {
             invalidations = compareBucketToLocal(
                 props.bucketName!,
@@ -70,7 +70,7 @@ function getInvalidations(
     return invalidations;
 }
 
-function compareBucketToLocal(bucket: string, localFolder: string): string[] | undefined {
+function compareBucketToLocal(bucket: string, localFolder: string): string[] {
     let oldHashesJSON: string
     const newHashes = getHashes("**", localFolder);
     writeFileSync(
@@ -81,16 +81,11 @@ function compareBucketToLocal(bucket: string, localFolder: string): string[] | u
         oldHashesJSON = execSync(
             `aws s3 cp s3://${bucket}/.hashes.json -`
         ).toString();
-    } catch (e) {
-        if (e) {
-            return undefined
-        }
+    } catch {
+        return ['/*']
     }
     const oldHashes: Map<string, string> = new Map(
         Object.entries(JSON.parse(oldHashesJSON!))
     );
-
-
-
     return getInvalidations(oldHashes, newHashes);
 }
