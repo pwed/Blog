@@ -18,7 +18,7 @@ jQuery(function ($) {
 
 count = window.document.getElementById("count");
 if (count != null) {
-  fetch(`https://api.pwed.me/count?path=${window.document.URL}`)
+  fetch(`https://${API}/count?path=${window.document.URL}`)
     .then((response) => {
       return response.json();
     })

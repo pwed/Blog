@@ -15,8 +15,14 @@ import {
 import * as path from "path";
 import { HugoDeployment } from "./constructs/hugo-deployment";
 
+export interface BlogProps extends StackProps {
+    zoneDomain: string;
+    blogDomain: string;
+    apiDomain: string;
+}
+
 export class BlogStack extends Stack {
-    constructor(scope: Construct, id: string, props?: StackProps) {
+    constructor(scope: Construct, id: string, props: BlogProps) {
         super(scope, id, props);
 
         const blogBucket = new s3.Bucket(this, "BlogBucket", {
@@ -28,12 +34,12 @@ export class BlogStack extends Stack {
         });
 
         const hostedZone = route53.HostedZone.fromLookup(this, "HostedZone", {
-            domainName: "pwed.me",
+            domainName: props.zoneDomain,
         });
 
         const certificate = new acm.Certificate(this, "Certificate", {
-            domainName: "blog.pwed.me",
-            subjectAlternativeNames: ["api.pwed.me"],
+            domainName: props.blogDomain,
+            subjectAlternativeNames: [props.apiDomain],
             validation: acm.CertificateValidation.fromDns(hostedZone),
         });
 
@@ -76,7 +82,7 @@ export class BlogStack extends Stack {
 
         const api = new apigw.RestApi(this, "API", {
             domainName: {
-                domainName: "api.pwed.me",
+                domainName: props.apiDomain,
                 certificate,
             },
             defaultCorsPreflightOptions: {
@@ -158,7 +164,7 @@ export class BlogStack extends Stack {
                 allowedMethods: cf.AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
                 viewerProtocolPolicy: cf.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
             },
-            domainNames: ["blog.pwed.me"],
+            domainNames: [props.blogDomain],
             certificate,
             errorResponses: [
                 {
@@ -171,7 +177,7 @@ export class BlogStack extends Stack {
         });
 
         new route53.ARecord(this, "AliasRecord", {
-            recordName: "blog.pwed.me",
+            recordName: props.blogDomain,
             zone: hostedZone,
             target: route53.RecordTarget.fromAlias(
                 new route53_targets.CloudFrontTarget(distribution)
@@ -179,7 +185,7 @@ export class BlogStack extends Stack {
         });
 
         new route53.ARecord(this, "AliasRecordApi", {
-            recordName: "api.pwed.me",
+            recordName: props.apiDomain,
             zone: hostedZone,
             target: route53.RecordTarget.fromAlias(
                 new route53_targets.ApiGateway(api)
@@ -190,9 +196,10 @@ export class BlogStack extends Stack {
             hugoPath: "..",
             hugoDistPath: "public",
             bucket: blogBucket,
-            distributionDomain: 'blog.pwed.me',
+            distributionDomain: props.blogDomain,
             hashFile: '.hashes.json',
             distribution: distribution,
+            apiDomain: props.apiDomain,
         });
     }
 }

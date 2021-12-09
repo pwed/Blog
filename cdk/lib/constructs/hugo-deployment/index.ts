@@ -1,6 +1,7 @@
 import { createHash } from "crypto";
 import { readFileSync, writeFileSync } from "fs";
 import { sync as globSync } from "glob";
+import * as yaml from 'yaml';
 import { chdir, cwd } from "process";
 import { execSync } from "child_process";
 import { Construct } from "constructs";
@@ -18,11 +19,14 @@ export interface HugoDeploymentProps {
     distributionDomain: string,
     hashFile: string;
     distribution: cf.Distribution;
+    apiDomain: string;
 }
+
 export class HugoDeployment extends Construct {
     constructor(scope: Construct, id: string, props: HugoDeploymentProps) {
         super(scope, id);
         const hugoDistFullPath = path.join(props.hugoPath, props.hugoDistPath);
+        updateHugoConfig(path.join(props.hugoPath, 'config.yaml'), { blogDomain: props.distributionDomain, apiDomain: props.apiDomain })
         execSync(
             `cd ${props.hugoPath} && rm -rf ${props.hugoDistPath} && hugo --minify`
         );
@@ -43,6 +47,14 @@ export class HugoDeployment extends Construct {
             distributionPaths: invalidations,
         });
     }
+}
+
+export function updateHugoConfig(configFile: string, config: {blogDomain: string, apiDomain: string}) {
+    console.log('Updating config file', configFile)
+    const configYaml = yaml.parse(readFileSync(configFile, 'utf8'));
+    configYaml.baseurl = `https://${config.blogDomain}/`;
+    configYaml.params.api = config.apiDomain;
+    writeFileSync(configFile, yaml.stringify(configYaml));
 }
 
 function getHashes(glob: string, dir: string): Map<string, string> {
