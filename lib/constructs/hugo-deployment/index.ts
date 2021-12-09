@@ -13,7 +13,8 @@ export interface HugoDeploymentProps {
     hugoPath: string;
     hugoDistPath: string;
     bucket: Bucket;
-    bucketName?: string;
+    distributionDomain: string,
+    hashFile: string;
     distribution: Distribution;
 }
 export class HugoDeployment extends Construct {
@@ -24,13 +25,12 @@ export class HugoDeployment extends Construct {
             `cd ${props.hugoPath} && rm -rf ${props.hugoDistPath} && hugo`
         );
 
-        let invalidations: string[] = ['/*'];
-        if (props.bucketName) {
-            invalidations = compareBucketToLocal(
-                props.bucketName!,
-                hugoDistFullPath
-            );
-        }
+        let invalidations: string[] = [`/${props.hashFile}`];
+        invalidations = compareRemoteToLocal(
+            props.distributionDomain,
+            props.hashFile,
+            hugoDistFullPath
+        );
 
         new BucketDeployment(this, "HugoDeployment", {
             sources: [Source.asset(hugoDistFullPath)],
@@ -70,19 +70,19 @@ function getInvalidations(
     return invalidations;
 }
 
-function compareBucketToLocal(bucket: string, localFolder: string): string[] {
+function compareRemoteToLocal(domain: string, hashFile: string, localFolder: string): string[] {
     let oldHashesJSON: string
     const newHashes = getHashes("**", localFolder);
     writeFileSync(
-        path.join(localFolder, '.hashes.json'),
+        path.join(localFolder, hashFile),
         JSON.stringify(Object.fromEntries(newHashes))
     );
     try {
         oldHashesJSON = execSync(
-            `aws s3 cp s3://${bucket}/.hashes.json -`
+            `curl https://${domain}/${hashFile}`
         ).toString();
-    } catch {
-        console.log('error getting file from s3')
+    } catch (e) {
+        console.log('error getting file from s3', e)
         return ['/*']
     }
     const oldHashes: Map<string, string> = new Map(

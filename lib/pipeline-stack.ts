@@ -29,12 +29,12 @@ export class BlogPipelineStack extends Stack {
     const deploy = new BlogPipelineStage(this, "Deploy");
     const deployStage = pipeline.addStage(deploy);
 
-    pipeline.buildPipeline();
+    // pipeline.buildPipeline();
 
-    pipeline.pipeline.addToRolePolicy(new PolicyStatement({
-      actions: ['s3:getObject'],
-      effect: Effect.ALLOW,
-      resources: ['arn:aws:s3:::*/.hashes.json'],
-    }))
+    // pipeline.pipeline.addToRolePolicy(new PolicyStatement({
+    //   actions: ['s3:getObject'],
+    //   effect: Effect.ALLOW,
+    //   resources: ['arn:aws:s3:::*/.hashes.json'],
+    // }))
   }
 }

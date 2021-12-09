@@ -190,7 +190,8 @@ export class BlogStack extends Stack {
             hugoPath: "blog",
             hugoDistPath: "public",
             bucket: blogBucket,
-            bucketName: 'deploy-blogstack-blogbucket3e358f18-15mfcd732v3d6',
+            distributionDomain: 'blog.pwed.me',
+            hashFile: '.hashes.json',
             distribution: distribution,
         });
     }
