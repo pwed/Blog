@@ -56,6 +56,7 @@ export class BlogStack extends Stack {
                 handler: "main",
                 environment: {
                     DatabaseTable: dynamoTable.tableName,
+                    AccessControlAllowOrigin: props.blogDomain,
                 },
             }
         );
@@ -77,6 +78,9 @@ export class BlogStack extends Stack {
             {
                 entry: path.join(__dirname, "lambda", "random", "index.ts"),
                 handler: "ApiLambda",
+                environment: {
+                    AccessControlAllowOrigin: props.blogDomain,
+                },
             }
         );
 
@@ -197,7 +201,7 @@ export class BlogStack extends Stack {
             hugoDistPath: "public",
             bucket: blogBucket,
             distributionDomain: props.blogDomain,
-            hashFile: '.hashes.json',
+            hashFile: ".hashes.json",
             distribution: distribution,
             apiDomain: props.apiDomain,
         });

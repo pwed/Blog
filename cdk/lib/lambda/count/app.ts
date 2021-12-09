@@ -8,6 +8,8 @@ export const main: Handler = async ( event: APIGatewayProxyEvent ) => {
   let data;
   let id = event.queryStringParameters ? event.queryStringParameters['path'] : null
   let referer = event.headers ? event.headers['referer'] : null
+  let AccessControlAllowOrigin = process.env.AccessControlAllowOrigin!
+  config.headers["Access-Control-Allow-Origin"] = AccessControlAllowOrigin
 
 
   if (!id) {
