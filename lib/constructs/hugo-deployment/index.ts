@@ -26,11 +26,11 @@ export class HugoDeployment extends Construct {
         );
 
         let invalidations: string[] = [`/${props.hashFile}`];
-        invalidations = compareRemoteToLocal(
+        invalidations.push(...compareRemoteToLocal(
             props.distributionDomain,
             props.hashFile,
             hugoDistFullPath
-        );
+        ))
 
         new BucketDeployment(this, "HugoDeployment", {
             sources: [Source.asset(hugoDistFullPath)],
