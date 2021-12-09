@@ -25,10 +25,11 @@ export interface HugoDeploymentProps {
 export class HugoDeployment extends Construct {
     constructor(scope: Construct, id: string, props: HugoDeploymentProps) {
         super(scope, id);
-        const hugoDistFullPath = path.join(props.hugoPath, props.hugoDistPath);
+        const distpath = path.join(props.hugoDistPath, props.distributionDomain)
+        const hugoDistFullPath = path.join(props.hugoPath, distpath);
         updateHugoConfig(path.join(props.hugoPath, 'config.yaml'), { blogDomain: props.distributionDomain, apiDomain: props.apiDomain })
         execSync(
-            `cd ${props.hugoPath} && rm -rf ${props.hugoDistPath} && hugo --minify`
+            `cd ${props.hugoPath} && rm -rf ${distpath} && hugo --minify --destination ${distpath}`
         );
 
         let invalidations: string[] = [`/${props.hashFile}`];

@@ -1,8 +1,6 @@
 import { Construct } from "constructs";
 import { Stack, StackProps, pipelines } from "aws-cdk-lib";
-import {
-  BlogDeploy
-} from "./pipeline-stage";
+import { BlogDeploy } from "./pipeline-stage";
 import { ManualApprovalStep } from "aws-cdk-lib/pipelines";
 
 export class BlogPipelineStack extends Stack {
@@ -34,23 +32,19 @@ export class BlogPipelineStack extends Stack {
         });
 
         pipeline.addStage(
-            new BlogDeploy(this, "BlogDevDeployDev",{
-              env: props?.env,
-              zoneDomain: 'pwed.me',
-              blogDomain: 'dev.pwed.me',
-              apiDomain: 'api.dev.pwed.me'
+            new BlogDeploy(this, "BlogDevDeployDev", {
+                env: props?.env,
+                zoneDomain: "pwed.me",
+                blogDomain: "dev.pwed.me",
+                apiDomain: "api.dev.pwed.me",
             })
         );
-        const prodDeploy = new BlogDeploy(
-            this,
-            "BlogPipelineProdDeploy",
-            {
-                env: { account: "967803995830", region: "us-east-1" },
-                blogDomain: "pwed.me",
-                zoneDomain: "pwed.me",
-                apiDomain: "api.pwed.me",
-            }
-        );
+        const prodDeploy = new BlogDeploy(this, "BlogPipelineProdDeploy", {
+            env: props?.env,
+            blogDomain: "pwed.me",
+            zoneDomain: "pwed.me",
+            apiDomain: "api.pwed.me",
+        });
         pipeline.addStage(prodDeploy, {
             pre: [new ManualApprovalStep("Deploy to Prod?")],
         });
