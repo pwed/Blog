@@ -6,5 +6,8 @@
         "cdk/lib/*.js": true,
         "cdk/lib/**/*.js": true,
         "cdk/test/*.js": true
-    }
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
 }

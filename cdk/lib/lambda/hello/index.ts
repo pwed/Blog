@@ -1,1 +1,1 @@
-export { handler as ApiLambda } from "./api";
+export { handler as ApiLambda } from './api';

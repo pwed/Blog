@@ -1,5 +1,5 @@
-import { Construct } from "constructs";
-import { Stack, StackProps, RemovalPolicy, aws_iam } from "aws-cdk-lib";
+import { Construct } from 'constructs';
+import { Stack, StackProps, RemovalPolicy, aws_iam } from 'aws-cdk-lib';
 import {
     aws_s3 as s3,
     aws_route53 as route53,
@@ -11,9 +11,9 @@ import {
     aws_apigateway as apigw,
     aws_dynamodb as dynamo,
     aws_s3_notifications as s3n,
-} from "aws-cdk-lib";
-import * as path from "path";
-import { HugoDeployment } from "./constructs/hugo-deployment";
+} from 'aws-cdk-lib';
+import * as path from 'path';
+import { HugoDeployment } from './constructs/hugo-deployment';
 
 export interface BlogProps extends StackProps {
     zoneDomain: string;
@@ -25,7 +25,7 @@ export class BlogStack extends Stack {
     constructor(scope: Construct, id: string, props: BlogProps) {
         super(scope, id, props);
 
-        const blogBucket = new s3.Bucket(this, "BlogBucket", {
+        const blogBucket = new s3.Bucket(this, 'BlogBucket', {
             removalPolicy: RemovalPolicy.DESTROY,
             versioned: true,
             encryption: s3.BucketEncryption.S3_MANAGED,
@@ -33,58 +33,58 @@ export class BlogStack extends Stack {
             autoDeleteObjects: true,
         });
 
-        const hostedZone = route53.HostedZone.fromLookup(this, "HostedZone", {
+        const hostedZone = route53.HostedZone.fromLookup(this, 'HostedZone', {
             domainName: props.zoneDomain,
         });
 
-        const certificate = new acm.Certificate(this, "Certificate", {
+        const certificate = new acm.Certificate(this, 'Certificate', {
             domainName: props.blogDomain,
             subjectAlternativeNames: [props.apiDomain],
             validation: acm.CertificateValidation.fromDns(hostedZone),
         });
 
-        const dynamoTable = new dynamo.Table(this, "DynamoTable", {
-            partitionKey: { name: "ID", type: dynamo.AttributeType.STRING },
+        const dynamoTable = new dynamo.Table(this, 'DynamoTable', {
+            partitionKey: { name: 'ID', type: dynamo.AttributeType.STRING },
             billingMode: dynamo.BillingMode.PAY_PER_REQUEST,
         });
 
         const countHandler = new lambda_nodejs.NodejsFunction(
             this,
-            "CountHandler",
+            'CountHandler',
             {
-                entry: path.join(__dirname, "lambda", "count", "app.ts"),
-                handler: "main",
+                entry: path.join(__dirname, 'lambda', 'count', 'app.ts'),
+                handler: 'main',
                 environment: {
                     DatabaseTable: dynamoTable.tableName,
                     AccessControlAllowOrigin: `https://${props.blogDomain}`,
                 },
-            }
+            },
         );
 
         dynamoTable.grantReadWriteData(countHandler);
 
         const helloHandler = new lambda_nodejs.NodejsFunction(
             this,
-            "HelloHandler",
+            'HelloHandler',
             {
-                entry: path.join(__dirname, "lambda", "hello", "index.ts"),
-                handler: "ApiLambda",
-            }
+                entry: path.join(__dirname, 'lambda', 'hello', 'index.ts'),
+                handler: 'ApiLambda',
+            },
         );
 
         const randomHandler = new lambda_nodejs.NodejsFunction(
             this,
-            "RandomHandler",
+            'RandomHandler',
             {
-                entry: path.join(__dirname, "lambda", "random", "index.ts"),
-                handler: "ApiLambda",
+                entry: path.join(__dirname, 'lambda', 'random', 'index.ts'),
+                handler: 'ApiLambda',
                 environment: {
                     AccessControlAllowOrigin: `https://${props.blogDomain}`,
                 },
-            }
+            },
         );
 
-        const api = new apigw.RestApi(this, "API", {
+        const api = new apigw.RestApi(this, 'API', {
             domainName: {
                 domainName: props.apiDomain,
                 certificate,
@@ -94,49 +94,49 @@ export class BlogStack extends Stack {
                 exposeHeaders: apigw.Cors.DEFAULT_HEADERS,
                 allowMethods: apigw.Cors.ALL_METHODS,
             },
-            description: "A fun API for varoius things I am playing with",
+            description: 'A fun API for varoius things I am playing with',
         });
 
-        const hello = api.root.addResource("{hello+}", {
+        const hello = api.root.addResource('{hello+}', {
             defaultIntegration: new apigw.LambdaIntegration(helloHandler),
         });
-        hello.addMethod("GET");
+        hello.addMethod('GET');
 
-        const random = api.root.addResource("random").addResource("{number}");
-        random.addMethod("GET", new apigw.LambdaIntegration(randomHandler), {
+        const random = api.root.addResource('random').addResource('{number}');
+        random.addMethod('GET', new apigw.LambdaIntegration(randomHandler), {
             methodResponses: [
                 {
-                    statusCode: "200",
+                    statusCode: '200',
                 },
             ],
         });
 
-        const count = api.root.addResource("count");
-        count.addMethod("GET", new apigw.LambdaIntegration(countHandler), {
+        const count = api.root.addResource('count');
+        count.addMethod('GET', new apigw.LambdaIntegration(countHandler), {
             methodResponses: [
                 {
-                    statusCode: "200",
+                    statusCode: '200',
                 },
             ],
         });
 
-        const ip = api.root.addResource("ip");
+        const ip = api.root.addResource('ip');
         ip.addMethod(
-            "GET",
+            'GET',
             new apigw.MockIntegration({
                 passthroughBehavior:
                     apigw.PassthroughBehavior.WHEN_NO_TEMPLATES,
                 requestTemplates: {
-                    "application/json": '{"statusCode": 200}',
-                    "text/html": '{"statusCode": 200}',
+                    'application/json': '{"statusCode": 200}',
+                    'text/html': '{"statusCode": 200}',
                 },
                 integrationResponses: [
                     {
-                        statusCode: "200",
+                        statusCode: '200',
                         responseTemplates: {
-                            "application/json":
+                            'application/json':
                                 '{"ip":"$context.identity.sourceIp"}',
-                            "text/html": "$context.identity.sourceIp",
+                            'text/html': '$context.identity.sourceIp',
                         },
                     },
                 ],
@@ -144,23 +144,23 @@ export class BlogStack extends Stack {
             {
                 methodResponses: [
                     {
-                        statusCode: "200",
+                        statusCode: '200',
                     },
                 ],
-            }
+            },
         );
 
-        new apigw.Deployment(this, "deployment", {
+        new apigw.Deployment(this, 'deployment', {
             api,
         }).applyRemovalPolicy(RemovalPolicy.RETAIN);
 
         const originAccessIdentity = new cf.OriginAccessIdentity(
             this,
-            "OriginAccessIdentity"
+            'OriginAccessIdentity',
         );
         blogBucket.grantRead(originAccessIdentity);
 
-        const distribution = new cf.Distribution(this, "Distribution", {
+        const distribution = new cf.Distribution(this, 'Distribution', {
             defaultBehavior: {
                 origin: new cf_origins.S3Origin(blogBucket, {
                     originAccessIdentity,
@@ -174,34 +174,34 @@ export class BlogStack extends Stack {
                 {
                     httpStatus: 404,
                     responseHttpStatus: 404,
-                    responsePagePath: "/404.html",
+                    responsePagePath: '/404.html',
                 },
             ],
-            defaultRootObject: "index.html",
+            defaultRootObject: 'index.html',
         });
 
-        new route53.ARecord(this, "AliasRecord", {
+        new route53.ARecord(this, 'AliasRecord', {
             recordName: props.blogDomain,
             zone: hostedZone,
             target: route53.RecordTarget.fromAlias(
-                new route53_targets.CloudFrontTarget(distribution)
+                new route53_targets.CloudFrontTarget(distribution),
             ),
         });
 
-        new route53.ARecord(this, "AliasRecordApi", {
+        new route53.ARecord(this, 'AliasRecordApi', {
             recordName: props.apiDomain,
             zone: hostedZone,
             target: route53.RecordTarget.fromAlias(
-                new route53_targets.ApiGateway(api)
+                new route53_targets.ApiGateway(api),
             ),
         });
 
-        new HugoDeployment(this, "BlogDeployment", {
-            hugoPath: "..",
-            hugoDistPath: "public",
+        new HugoDeployment(this, 'BlogDeployment', {
+            hugoPath: '..',
+            hugoDistPath: 'public',
             bucket: blogBucket,
             distributionDomain: props.blogDomain,
-            hashFile: ".hashes.json",
+            hashFile: '.hashes.json',
             distribution: distribution,
             apiDomain: props.apiDomain,
         });
