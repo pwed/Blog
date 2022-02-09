@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from 'fs';
 import { sync as globSync } from 'glob';
 import * as yaml from 'yaml';
 import { chdir, cwd } from 'process';
-import { execSync } from 'child_process';
+import { ExecException, execSync } from 'child_process';
 import { Construct } from 'constructs';
 import {
     aws_s3 as s3,
@@ -62,7 +62,6 @@ export function updateHugoConfig(
     configFile: string,
     config: { blogDomain: string; apiDomain: string },
 ) {
-    console.log('Updating config file', configFile);
     const configYaml = yaml.parse(readFileSync(configFile, 'utf8'));
     configYaml.baseurl = `https://${config.blogDomain}/`;
     configYaml.params.api = config.apiDomain;
@@ -111,14 +110,14 @@ function compareRemoteToLocal(
     );
     try {
         oldHashesJSON = execSync(
-            `curl https://${domain}/${hashFile}`,
+            `curl -s https://${domain}/${hashFile}`,
         ).toString();
     } catch (e) {
-        console.log('error getting file from web', e);
+        console.error('error getting file from web', e.message!);
         return ['/*'];
     }
     const oldHashes: Map<string, string> = new Map(
-        Object.entries(JSON.parse(oldHashesJSON!)),
+        Object.entries(JSON.parse(oldHashesJSON)),
     );
     return getInvalidations(oldHashes, newHashes);
 }

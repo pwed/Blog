@@ -1,5 +1,11 @@
 import { Construct } from 'constructs';
-import { Stack, StackProps, pipelines, aws_sns as sns } from 'aws-cdk-lib';
+import {
+    Stack,
+    StackProps,
+    pipelines,
+    aws_sns as sns,
+    Environment,
+} from 'aws-cdk-lib';
 import { BlogDeploy } from './pipeline-stage';
 import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
 import { PipelineNotificationEvents } from 'aws-cdk-lib/aws-codepipeline';
@@ -11,6 +17,7 @@ export class BlogPipelineStack extends Stack {
         const pipeline = new pipelines.CodePipeline(this, 'Pipeline', {
             pipelineName: 'BlogPipeline',
             publishAssetsInParallel: false,
+            crossAccountKeys: true,
 
             synth: new pipelines.ShellStep('Synth', {
                 input: pipelines.CodePipelineSource.connection(
@@ -18,7 +25,7 @@ export class BlogPipelineStack extends Stack {
                     'master',
                     {
                         connectionArn:
-                            'arn:aws:codestar-connections:us-east-1:967803995830:connection/762f8358-181b-4602-8ec0-92982a01386f',
+                            'arn:aws:codestar-connections:us-east-1:681601794463:connection/4b0ed15e-f47f-4518-aeb3-4dfffe5fe440',
                     },
                 ),
                 installCommands: [
@@ -32,16 +39,21 @@ export class BlogPipelineStack extends Stack {
             dockerEnabledForSynth: true,
         });
 
+        const deploymentEnv: Environment = {
+            account: '806124249357',
+            region: 'us-east-1',
+        };
+
         pipeline.addStage(
-            new BlogDeploy(this, 'BlogDevDeployDev', {
-                env: props?.env,
+            new BlogDeploy(this, 'BlogDevDeploy', {
+                env: deploymentEnv,
                 zoneDomain: 'pwed.me',
                 blogDomain: 'dev.pwed.me',
                 apiDomain: 'api.dev.pwed.me',
             }),
         );
-        const prodDeploy = new BlogDeploy(this, 'BlogPipelineProdDeploy', {
-            env: props?.env,
+        const prodDeploy = new BlogDeploy(this, 'BlogProdDeploy', {
+            env: deploymentEnv,
             blogDomain: 'pwed.me',
             zoneDomain: 'pwed.me',
             apiDomain: 'api.pwed.me',
