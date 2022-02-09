@@ -17,7 +17,7 @@ export class BlogPipelineStack extends Stack {
         const pipeline = new pipelines.CodePipeline(this, 'Pipeline', {
             pipelineName: 'BlogPipeline',
             publishAssetsInParallel: false,
-            // crossAccountKeys: true,
+            crossAccountKeys: true,
             synth: new pipelines.ShellStep('Synth', {
                 input: pipelines.CodePipelineSource.connection(
                     'pwed/Blog',
