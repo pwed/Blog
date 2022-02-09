@@ -17,15 +17,14 @@ export class BlogPipelineStack extends Stack {
         const pipeline = new pipelines.CodePipeline(this, 'Pipeline', {
             pipelineName: 'BlogPipeline',
             publishAssetsInParallel: false,
-            crossAccountKeys: true,
-
+            // crossAccountKeys: true,
             synth: new pipelines.ShellStep('Synth', {
                 input: pipelines.CodePipelineSource.connection(
                     'pwed/Blog',
                     'master',
                     {
                         connectionArn:
-                            'arn:aws:codestar-connections:us-east-1:681601794463:connection/4b0ed15e-f47f-4518-aeb3-4dfffe5fe440',
+                            'arn:aws:codestar-connections:us-east-1:681601794463:connection/fe38adc3-8f83-44d1-b145-afd9e2706fd1',
                     },
                 ),
                 installCommands: [
