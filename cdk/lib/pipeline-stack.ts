@@ -31,7 +31,7 @@ export class BlogPipelineStack extends Stack {
                     'apt-get update && apt-get install -y hugo make',
                     // 'npm install -g aws-cdk',
                 ],
-                commands: ['cd cdk', 'npm ci', 'npx cdk synth -q'],
+                commands: ['cd cdk', 'npm i', 'npx cdk synth -q'],
                 primaryOutputDirectory: 'cdk/cdk.out',
             }),
             dockerEnabledForSelfMutation: true,
