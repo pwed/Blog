@@ -30,7 +30,7 @@
     "aws-cdk-lib": "^2.10.0",
     "constructs": "^10.0.0",
     "glob": "^7.2.0",
-    "pwed-cdk": "^0.1.26",
+    "pwed-cdk": "^0.1.27",
     "source-map-support": "^0.5.16",
     "tmpl": ">=1.0.5",
     "yaml": "^1.10.2"
