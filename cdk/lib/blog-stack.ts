@@ -1,16 +1,12 @@
 import { Construct } from 'constructs';
-import { Stack, StackProps, RemovalPolicy, aws_iam } from 'aws-cdk-lib';
+import { Stack, StackProps, RemovalPolicy } from 'aws-cdk-lib';
 import {
-    aws_s3 as s3,
     aws_route53 as route53,
     aws_route53_targets as route53_targets,
     aws_certificatemanager as acm,
-    aws_cloudfront as cf,
-    aws_cloudfront_origins as cf_origins,
     aws_lambda_nodejs as lambda_nodejs,
     aws_apigateway as apigw,
     aws_dynamodb as dynamo,
-    aws_s3_notifications as s3n,
 } from 'aws-cdk-lib';
 import * as path from 'path';
 import { HugoDeployment } from './constructs/hugo-deployment';
@@ -25,16 +21,17 @@ export class BlogStack extends Stack {
     constructor(scope: Construct, id: string, props: BlogProps) {
         super(scope, id, props);
 
-        const blogBucket = new s3.Bucket(this, 'BlogBucket', {
-            removalPolicy: RemovalPolicy.DESTROY,
-            versioned: true,
-            encryption: s3.BucketEncryption.S3_MANAGED,
-            accessControl: s3.BucketAccessControl.BUCKET_OWNER_READ,
-            autoDeleteObjects: true,
-        });
-
         const hostedZone = route53.HostedZone.fromLookup(this, 'HostedZone', {
             domainName: props.zoneDomain,
+        });
+
+        new HugoDeployment(this, 'BlogDeployment', {
+            hugoPath: '..',
+            hugoDistPath: 'public',
+            domain: props.blogDomain,
+            hostedZone,
+            hashFile: '.hashes.json',
+            apiDomain: props.apiDomain,
         });
 
         const certificate = new acm.Certificate(this, 'Certificate', {
@@ -154,56 +151,12 @@ export class BlogStack extends Stack {
             api,
         }).applyRemovalPolicy(RemovalPolicy.RETAIN);
 
-        const originAccessIdentity = new cf.OriginAccessIdentity(
-            this,
-            'OriginAccessIdentity',
-        );
-        blogBucket.grantRead(originAccessIdentity);
-
-        const distribution = new cf.Distribution(this, 'Distribution', {
-            defaultBehavior: {
-                origin: new cf_origins.S3Origin(blogBucket, {
-                    originAccessIdentity,
-                }),
-                allowedMethods: cf.AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
-                viewerProtocolPolicy: cf.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-            },
-            domainNames: [props.blogDomain],
-            certificate,
-            errorResponses: [
-                {
-                    httpStatus: 404,
-                    responseHttpStatus: 404,
-                    responsePagePath: '/404.html',
-                },
-            ],
-            defaultRootObject: 'index.html',
-        });
-
-        new route53.ARecord(this, 'AliasRecord', {
-            recordName: props.blogDomain,
-            zone: hostedZone,
-            target: route53.RecordTarget.fromAlias(
-                new route53_targets.CloudFrontTarget(distribution),
-            ),
-        });
-
         new route53.ARecord(this, 'AliasRecordApi', {
             recordName: props.apiDomain,
             zone: hostedZone,
             target: route53.RecordTarget.fromAlias(
                 new route53_targets.ApiGateway(api),
             ),
-        });
-
-        new HugoDeployment(this, 'BlogDeployment', {
-            hugoPath: '..',
-            hugoDistPath: 'public',
-            bucket: blogBucket,
-            distributionDomain: props.blogDomain,
-            hashFile: '.hashes.json',
-            distribution: distribution,
-            apiDomain: props.apiDomain,
         });
     }
 }

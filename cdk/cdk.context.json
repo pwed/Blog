@@ -1,8 +1,4 @@
 {
-  "hosted-zone:account=967803995830:domainName=pwed.me:region=us-east-1": {
-    "Id": "/hostedzone/Z04081842WH99NZJ1M9PE",
-    "Name": "pwed.me."
-  },
   "hosted-zone:account=806124249357:domainName=pwed.me:region=us-east-1": {
     "Id": "/hostedzone/Z01252978MAIJD508OO9",
     "Name": "pwed.me."
