@@ -28,11 +28,11 @@ export class HugoDeployment extends Construct {
             `cd ${props.hugoPath} && rm -rf ${distpath} && hugo --minify --destination ${distpath}`,
         );
 
-        new pwed_static_site.StaticSite(this, 'HugoSite', {
-            domain: props.domain,
-            hostedZone: props.hostedZone,
-            path: hugoDistFullPath,
-        });
+        // new pwed_static_site.StaticSite(this, 'HugoSite', {
+        //     domain: props.domain,
+        //     hostedZone: props.hostedZone,
+        //     path: hugoDistFullPath,
+        // });
     }
 }
 
