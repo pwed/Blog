@@ -30,9 +30,7 @@ export class BlogPipelineStack extends Stack {
                 installCommands: [
                     'apt-get update && apt-get install -y hugo make curl',
                     'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash',
-                    'export NVM_DIR="$HOME/.nvm"',
-                    '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"',
-                    'nvm install --lts',
+                    'export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh" && nvm install --lts',
                 ],
                 commands: ['cd cdk', 'npm ci', 'npx cdk synth'],
                 primaryOutputDirectory: 'cdk/cdk.out',
