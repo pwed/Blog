@@ -52,24 +52,26 @@ export class BlogPipelineStack extends Stack {
                 apiDomain: 'api.dev.pwed.me',
             }),
         );
-        const prodDeploy = new BlogDeploy(this, 'BlogProdDeploy', {
-            env: deploymentEnv,
-            blogDomain: 'pwed.me',
-            zoneDomain: 'pwed.me',
-            apiDomain: 'api.pwed.me',
-        });
-        pipeline.addStage(prodDeploy, {
-            stackSteps: [
-                {
-                    stack: prodDeploy.stack,
-                    changeSet: [
-                        new pipelines.ManualApprovalStep('ChangeSet Approval', {
-                            comment: 'Check Dev and check change request',
-                        }),
-                    ],
-                },
-            ],
-        });
+        pipeline.addStage(
+            new BlogDeploy(this, 'BlogProdDeploy', {
+                env: deploymentEnv,
+                blogDomain: 'pwed.me',
+                zoneDomain: 'pwed.me',
+                apiDomain: 'api.pwed.me',
+            }),
+            {
+                // stackSteps: [
+                //     {
+                //         stack: prodDeploy.stack,
+                //         // changeSet: [
+                //         //     new pipelines.ManualApprovalStep('ChangeSet Approval', {
+                //         //         comment: 'Check Dev and check change request',
+                //         //     }),
+                //         // ],
+                //     },
+                // ],
+            },
+        );
         const topic = new sns.Topic(this, 'PipelineTopic');
         pipeline.buildPipeline();
         pipeline.pipeline.notifyOn('PipelineNotifications', topic, {
