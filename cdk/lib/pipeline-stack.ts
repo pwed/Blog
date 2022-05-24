@@ -50,6 +50,7 @@ export class BlogPipelineStack extends Stack {
                 zoneDomain: 'pwed.me',
                 blogDomain: 'dev.pwed.me',
                 apiDomain: 'api.dev.pwed.me',
+                draft: true,
             }),
         );
         pipeline.addStage(

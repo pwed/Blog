@@ -2,5 +2,8 @@
   "hosted-zone:account=806124249357:domainName=pwed.me:region=us-east-1": {
     "Id": "/hostedzone/Z01252978MAIJD508OO9",
     "Name": "pwed.me."
-  }
+  },
+  "acknowledged-issue-numbers": [
+    19179
+  ]
 }

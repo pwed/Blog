@@ -15,6 +15,7 @@ export interface BlogProps extends StackProps {
     zoneDomain: string;
     blogDomain: string;
     apiDomain: string;
+    draft?: true;
 }
 
 export class BlogStack extends Stack {
@@ -32,6 +33,7 @@ export class BlogStack extends Stack {
             hostedZone,
             hashFile: '.hashes.json',
             apiDomain: props.apiDomain,
+            draft: props.draft,
         });
 
         const certificate = new acm.Certificate(this, 'Certificate', {

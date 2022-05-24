@@ -13,6 +13,7 @@ export interface HugoDeploymentProps {
     hostedZone: aws_route53.IHostedZone;
     hashFile: string;
     apiDomain: string;
+    draft?: boolean;
 }
 
 export class HugoDeployment extends Construct {
@@ -25,7 +26,9 @@ export class HugoDeployment extends Construct {
             apiDomain: props.apiDomain,
         });
         execSync(
-            `cd ${props.hugoPath} && rm -rf ${distpath} && hugo --minify --destination ${distpath}`,
+            `cd ${props.hugoPath} && rm -rf ${distpath} && hugo ${
+                props.draft ? '-D' : ''
+            } --minify --destination ${distpath}`,
         );
 
         new pwed_static_site.StaticSite(this, 'HugoSite', {
