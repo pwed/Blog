@@ -4,7 +4,7 @@
             <span>Tagged:</span>
             {{- range $index, $tag := . -}}
                 {{- if $index -}}, {{ end }}
-                <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}/">{{ . }}</a>
+                <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}.html">{{ . }}</a>
             {{- end }}
         </p>
     {{ end -}}
