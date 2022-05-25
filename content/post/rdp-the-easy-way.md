@@ -7,17 +7,19 @@ tags: ["sso", "aws", "rdp", "bastion", "windows"]
 
 In my opinion, **RDP** has always felt messy in **AWS**. To connect securely, many users resort to complicated network tunneling using **SSH** or **SSM** port forwarding. In a past role I even wrote a PowerShell module to automate the setup of the tunnel and start the **RDP** application on Windows. This was good but had it's own issues, including, not being cross platform (although it probably could have been if I had a MacBook and some extra time).
 
+![comparrison of ssh tunnel and connect with rdp](/images/ssh-ssm-diagrams.svg)
+
 A relatively new feature in **Systems Manager** has made the whole process of securely and conveniently connecting to a Windows server in AWS through RDP a lot easier. What sweetens the pie even more is that the **RDP** session is entirely in the browser, so that makes it 100% cross platform. The feature is labeled as **Connect with Remote Desktop** in the AWS Console or **SSM GUI Connect** when configuring access in **IAM** (which makes it sound like it may support more then just Windows targets in the future). To get to **RDP Connect** you need to navigate to the **Fleet Manager** section in **Systems Manager**, then when you select your Windows instance, the option will appear in the drop down menu.
 
-![](/images/guiconnect.png)
+![screenshot of fleet manager](/images/guiconnect.png)
 
 Normally when connecting to an instance you are presented with 2 options to authenticate, **User credentials** or **Key pair**, but when you are logged into the console as an **AWS SSO** user, a third option appears, we can log in using our SSO user. This solves my other major issue with **Windows** servers in **AWS**, managing credentials and users. **Connect with Remote Desktop** will automatically create a new user based on our SSO username and will also handle the credential storage.
 
-![](/images/sso-login.png)
+![screenshot of rdp login options](/images/sso-login.png)
 
 After logging in we will be greeted with the windows desktop as with a normal RDP session. Fleet Manager allows us to have up to four active **RDP** sessions open in the same tab, this is great for working on multiple nodes at once. Each session has a limit of one hour, although you can reconnect if you time out.
 
-![](/images/desktop.png)
+![screenshot of fleetmanager with active rdp session](/images/desktop.png)
 
 ## Requirements
 
