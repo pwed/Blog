@@ -22,7 +22,7 @@
             </div>
         </footer>
         {{ $scriptsjs := resources.Get "js/scripts.js" }}
-        {{ $jquery := resources.Get "js/jquery-1.11.3.min.js" }}
+        {{ $jquery := resources.Get "js/jquery-3.6.0.js" }}
         {{ $jqueryfitvids := resources.Get "js/jquery.fitvids.js" }}
         {{ $concatjs := slice $jquery $jqueryfitvids $scriptsjs | resources.Concat "js/bundle-all.js" }}
         {{ $jsallmin := $concatjs | resources.Minify }}
