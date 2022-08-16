@@ -3,7 +3,7 @@ import * as yaml from 'yaml';
 import { execSync } from 'child_process';
 import { Construct } from 'constructs';
 import path = require('path');
-import { pwed_static_site } from 'pwed-cdk';
+import { static_site } from 'pwed-cdk';
 import { aws_route53 } from 'aws-cdk-lib';
 
 export interface HugoDeploymentProps {
@@ -31,7 +31,7 @@ export class HugoDeployment extends Construct {
             } --minify --destination ${distpath}`,
         );
 
-        new pwed_static_site.StaticSite(this, 'HugoSite', {
+        new static_site.StaticSite(this, 'HugoSite', {
             domain: props.domain,
             hostedZone: props.hostedZone,
             path: hugoDistFullPath,
