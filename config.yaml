@@ -1,4 +1,4 @@
-baseurl: https://pwed.me/
+baseurl: https://dev.pwed.me/
 title: Pwed's Blog
 theme: ghostwriter
 languageCode: en-us
@@ -41,7 +41,7 @@ params:
   linkedin: https://linkedin.com/in/frederickstoddart/
   twitter: https://twitter.com/genuinepwed
   email: freddiestoddart000@gmail.com
-  api: api.pwed.me
+  api: api.dev.pwed.me
   opengraph: true
   shareTwitter: true
   rss: true

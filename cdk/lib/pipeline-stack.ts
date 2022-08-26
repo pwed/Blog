@@ -10,6 +10,7 @@ import {
 import { BlogDeploy } from './pipeline-stage';
 import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
 import { PipelineNotificationEvents } from 'aws-cdk-lib/aws-codepipeline';
+import { Account } from './constant';
 
 export class BlogPipelineStack extends Stack {
     constructor(scope: Construct, id: string, props?: StackProps) {
@@ -47,7 +48,7 @@ export class BlogPipelineStack extends Stack {
         });
 
         const deploymentEnv: Environment = {
-            account: '806124249357',
+            account: Account.WORKLOAD,
             region: 'us-east-1',
         };
 
