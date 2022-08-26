@@ -18,7 +18,7 @@
         "@types/node": "10.17.27",
         "@types/yaml": "^1.9.7",
         "@typescript-eslint/eslint-plugin": "^5.6.0",
-        "aws-cdk": "2.10.0",
+        "aws-cdk": "^2.10.0",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-prettier": "^4.0.0",
         "jest": "^26.4.2",
@@ -28,7 +28,7 @@
         "typescript": "~3.9.7"
     },
     "dependencies": {
-        "aws-cdk-lib": "^2.10.0",
+        "aws-cdk-lib": "^2.39.0",
         "constructs": "^10.0.0",
         "glob": "^7.2.0",
         "pwed-cdk": "^0.0.56",

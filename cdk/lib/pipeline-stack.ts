@@ -5,6 +5,7 @@ import {
     pipelines,
     aws_sns as sns,
     Environment,
+    aws_codebuild,
 } from 'aws-cdk-lib';
 import { BlogDeploy } from './pipeline-stage';
 import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
@@ -18,6 +19,12 @@ export class BlogPipelineStack extends Stack {
             pipelineName: 'BlogPipeline',
             publishAssetsInParallel: false,
             crossAccountKeys: true,
+            synthCodeBuildDefaults: {
+                buildEnvironment: {
+                    computeType: aws_codebuild.ComputeType.SMALL,
+                    buildImage: aws_codebuild.LinuxBuildImage.AMAZON_LINUX_2_4,
+                },
+            },
             synth: new pipelines.ShellStep('Synth', {
                 input: pipelines.CodePipelineSource.connection(
                     'pwed/Blog',
