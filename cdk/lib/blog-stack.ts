@@ -1,5 +1,5 @@
 import { Construct } from 'constructs';
-import { Stack, StackProps, RemovalPolicy } from 'aws-cdk-lib';
+import { Stack, StackProps, RemovalPolicy, aws_lambda } from 'aws-cdk-lib';
 import {
     aws_route53 as route53,
     aws_route53_targets as route53_targets,
@@ -57,6 +57,7 @@ export class BlogStack extends Stack {
                     DatabaseTable: dynamoTable.tableName,
                     AccessControlAllowOrigin: `https://${props.blogDomain}`,
                 },
+                architecture: aws_lambda.Architecture.ARM_64,
             },
         );
 
@@ -68,6 +69,7 @@ export class BlogStack extends Stack {
             {
                 entry: path.join(__dirname, 'lambda', 'hello', 'index.ts'),
                 handler: 'ApiLambda',
+                architecture: aws_lambda.Architecture.ARM_64,
             },
         );
 
@@ -80,6 +82,7 @@ export class BlogStack extends Stack {
                 environment: {
                     AccessControlAllowOrigin: `https://${props.blogDomain}`,
                 },
+                architecture: aws_lambda.Architecture.ARM_64,
             },
         );
 
