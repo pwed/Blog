@@ -35,6 +35,7 @@ export class HugoDeployment extends Construct {
             domain: props.domain,
             hostedZone: props.hostedZone,
             path: hugoDistFullPath,
+            enablePrettyPaths: true,
         });
     }
 }

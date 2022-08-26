@@ -6,7 +6,7 @@ copyright: Frederick Stoddart
 disqusShortname: blog-pwed-me
 pygmentsUseClasses: true
 pygmentsCodefences: true
-uglyurls: true
+uglyurls: false
 markup:
   highlight:
     codeFences: true
