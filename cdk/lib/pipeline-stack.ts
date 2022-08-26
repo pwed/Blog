@@ -23,7 +23,9 @@ export class BlogPipelineStack extends Stack {
             synthCodeBuildDefaults: {
                 buildEnvironment: {
                     computeType: aws_codebuild.ComputeType.SMALL,
-                    buildImage: aws_codebuild.LinuxBuildImage.AMAZON_LINUX_2_4,
+                    buildImage:
+                        aws_codebuild.LinuxArmBuildImage
+                            .AMAZON_LINUX_2_STANDARD_2_0,
                 },
             },
             synth: new pipelines.ShellStep('Synth', {
@@ -36,9 +38,10 @@ export class BlogPipelineStack extends Stack {
                     },
                 ),
                 installCommands: [
-                    'apt-get update && apt-get install -y hugo make curl',
+                    'yum install -y curl wget tar gzip',
                     'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash',
                     'export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && nvm install --lts',
+                    'wget https://github.com/gohugoio/hugo/releases/download/v0.101.0/hugo_0.101.0_Linux-ARM64.tar.gz -O hugo.tar.gz && tar -xf hugo.tar.gz && cp hugo /bin/',
                 ],
                 commands: ['cd cdk', 'npm ci', 'npx cdk synth'],
                 primaryOutputDirectory: 'cdk/cdk.out',
