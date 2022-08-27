@@ -28,6 +28,12 @@ export class BlogPipelineStack extends Stack {
                             .AMAZON_LINUX_2_STANDARD_2_0,
                 },
             },
+            codeBuildDefaults: {
+                cache: aws_codebuild.Cache.local(
+                    aws_codebuild.LocalCacheMode.DOCKER_LAYER,
+                    aws_codebuild.LocalCacheMode.SOURCE,
+                ),
+            },
             synth: new pipelines.ShellStep('Synth', {
                 input: pipelines.CodePipelineSource.connection(
                     'pwed/Blog',
