@@ -3,6 +3,9 @@ title: "RDP the easy way"
 date: 2022-05-24 00:00:00+11:00
 images: ["/images/desktop.png"]
 tags: ["sso", "aws", "rdp", "bastion", "windows"]
+aliases: [
+  "/2022/05/24/rdp-the-easy-way.html"
+]
 ---
 
 In my opinion, **RDP** has always felt messy in **AWS**. To connect securely, many users resort to complicated network tunneling using **SSH** or **SSM** port forwarding. In a past role I even wrote a PowerShell module to automate the setup of the tunnel and start the **RDP** application on Windows. This was good but had it's own issues, including, not being cross platform (although it probably could have been if I had a MacBook and some extra time).
