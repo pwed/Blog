@@ -2,6 +2,7 @@
 title: "Deleting Default Vpc With Boto3"
 date: 2022-09-14T10:40:35+10:00
 draft: false
+tags: ["boto3", "vpc", "scripting"]
 ---
 
 When setting up a new account, AWS will create a default VPC that most people don't want to use.
