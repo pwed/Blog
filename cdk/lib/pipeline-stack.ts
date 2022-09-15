@@ -28,12 +28,6 @@ export class BlogPipelineStack extends Stack {
                             .AMAZON_LINUX_2_STANDARD_2_0,
                 },
             },
-            // codeBuildDefaults: {
-            //     cache: aws_codebuild.Cache.local(
-            //         aws_codebuild.LocalCacheMode.DOCKER_LAYER,
-            //         aws_codebuild.LocalCacheMode.SOURCE,
-            //     ),
-            // },
             synth: new pipelines.ShellStep('Synth', {
                 input: pipelines.CodePipelineSource.connection(
                     'pwed/Blog',
@@ -77,18 +71,6 @@ export class BlogPipelineStack extends Stack {
                 zoneDomain: 'pwed.me',
                 apiDomain: 'api.pwed.me',
             }),
-            {
-                // stackSteps: [
-                //     {
-                //         stack: prodDeploy.stack,
-                //         // changeSet: [
-                //         //     new pipelines.ManualApprovalStep('ChangeSet Approval', {
-                //         //         comment: 'Check Dev and check change request',
-                //         //     }),
-                //         // ],
-                //     },
-                // ],
-            },
         );
         const topic = new sns.Topic(this, 'PipelineTopic');
         pipeline.buildPipeline();
