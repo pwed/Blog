@@ -29,7 +29,7 @@
     },
     "dependencies": {
         "aws-cdk-lib": "^2.39.0",
-        "constructs": "^10.0.0",
+        "constructs": "^10.1.305",
         "glob": "^7.2.0",
         "pwed-cdk": "^0.0.60",
         "source-map-support": "^0.5.16",
