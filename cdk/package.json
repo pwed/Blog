@@ -30,7 +30,7 @@
     "dependencies": {
         "aws-cdk-lib": "^2.39.0",
         "constructs": "^10.0.0",
-        "glob": "^7.2.0",
+        "glob": "^9.0.0",
         "pwed-cdk": "^0.0.60",
         "source-map-support": "^0.5.16",
         "tmpl": ">=1.0.5",
